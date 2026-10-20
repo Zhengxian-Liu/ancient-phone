@@ -32,6 +32,9 @@ export interface Figure {
     calendar: { month: string; day: string; events: { title: string; sub?: string; color: string }[] };
   };
   threads: Thread[];
+  /** 我的名片: the figure's own card, pinned at the top of 通訊錄. */
+  me: Contact;
+  contacts: Contact[];
   photos: Photo[];
   map: MapData;
   wallet: WalletData;
@@ -53,7 +56,7 @@ export interface LockNotification {
 
 export type Message = (
   | { kind: 'system'; text: string } // centered timestamp/divider ("粗體 · 細字") or a line of narration
-  | { kind: 'in' | 'out'; text: string }
+  | { kind: 'in' | 'out'; text: string; /** Sender name, for incoming messages in a group thread. */ from?: string }
 ) &
   Gloss;
 
@@ -64,6 +67,27 @@ export interface Thread {
   when: string; // shown in the list
   unread?: boolean;
   messages: Message[];
+}
+
+/**
+ * A 通訊錄 entry. `memo` (備註) is the one place where invented wording is
+ * allowed: the figure's own note on this person, as of the frozen moment,
+ * every claim in it grounded in fact. Its `notes` give the basis.
+ */
+export interface Contact extends Gloss {
+  id: string;
+  name: string;
+  avatar: string; // one character
+  /** Under the name, e.g. 字子由 · 弟弟 */
+  subtitle: string;
+  /** Section in the list, e.g. 家人 / 朋友 / 御史臺. */
+  group: string;
+  fields: { label: string; value: string; tone?: 'link' | 'danger' | 'muted' }[];
+  memo?: string;
+  /** Thread opened by the 訊息 button; the thread header links back here. */
+  threadId?: string;
+  /** Shown as a small status line: 已故, 已封鎖… */
+  status?: string;
 }
 
 export interface Photo extends Gloss {

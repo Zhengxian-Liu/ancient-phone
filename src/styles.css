@@ -64,6 +64,8 @@ button { font-family: inherit; color: inherit; cursor: pointer; -webkit-tap-high
 .glass { -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); }
 .scroll { overflow-y: auto; scrollbar-width: none; }
 .scroll::-webkit-scrollbar { display: none; }
+/* A flex-column scroller whose rows must keep their natural height. */
+[data-noshrink] > * { flex-shrink: 0; }
 .plain-btn { background: none; border: 0; padding: 0; text-align: left; }
 .large-title { margin: 0; padding: 2px 16px 8px; font-size: 34px; font-weight: 700; letter-spacing: 0.3px; }
 .search-field {

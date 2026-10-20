@@ -9,7 +9,9 @@ export type Screen =
   | { name: 'photos' }
   | { name: 'maps' }
   | { name: 'wallet' }
-  | { name: 'notes' };
+  | { name: 'notes' }
+  | { name: 'contacts' }
+  | { name: 'contact'; contactId: string; back?: Screen };
 
 export interface PhoneState {
   figure: Figure;

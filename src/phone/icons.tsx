@@ -111,6 +111,17 @@ export const AppIcon = {
       <svg width={30 * scale(size)} height={30 * scale(size)} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z" /><path d="M12 6v14" /></svg>
     </Tile>
   ),
+  contacts: ({ size = 60 }: IconProps) => (
+    <Tile bg="linear-gradient(#ECE6D9, #CDC3B0)" size={size} style={{ overflow: 'hidden' }}>
+      <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="19.6" y="4" width="2" height="4.5" rx="0.6" fill="#C8322B" />
+        <rect x="19.6" y="9.8" width="2" height="4.5" rx="0.6" fill="#E5A50A" />
+        <rect x="19.6" y="15.6" width="2" height="4.5" rx="0.6" fill="#46623A" />
+        <circle cx="11" cy="9.6" r="3.4" fill="#6D6559" />
+        <path d="M4.6 19.4c.6-3.4 3.2-5.2 6.4-5.2s5.8 1.8 6.4 5.2z" fill="#6D6559" />
+      </svg>
+    </Tile>
+  ),
   settings: ({ size = 60 }: IconProps) => (
     <Tile bg="linear-gradient(#B4B4BA, #7C7C84)" size={size}>
       <svg width={32 * scale(size)} height={32 * scale(size)} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2" /><circle cx="12" cy="12" r="7" /><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8" /></svg>

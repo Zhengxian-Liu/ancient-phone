@@ -27,7 +27,7 @@ src/
     Gloss.tsx         白話/原文 toggle, 註釋 page and the nav buttons for both
     icons.tsx         original iOS-style app icons and SF-Symbol-like glyphs
   apps/               one file per app: LockScreen, HomeScreen, Messages,
-                      Photos, Maps, Wallet, Notes, Wallpaper
+                      Contacts, Photos, Maps, Wallet, Notes, Wallpaper
   App.tsx             scales the 393×852 device to the viewport
   styles.css          iOS system color tokens, bubble tails, shared classes
 ```
@@ -54,6 +54,10 @@ Everything explanatory goes in the item's `Gloss`. Each thread, photo, note and 
 - `src` — `原文 · 〈篇名〉`; abridge with （節錄）. Double-check the wording against the source.
 - `plain` — the 白話 rendering, written to stand in for the original in the same bubble.
 - `notes` — context, word glosses, variant readings, and caveats: who the text was really addressed to, how sure the dating is, and any moment you shifted in time for effect (see the 卜算子 note).
+
+Group threads (e.g. 家人) set `from` on incoming messages; if the source does not name the speaker, say so rather than guess (「家中婦女」, not 王閏之).
+
+**The one exception is 通訊錄.** A contact's `memo` (備註) is the figure's own note on that person, in modern, playful phone voice ("授權費：0"). Invented wording is fine there, but every claim must be grounded: put the basis in the contact's `src`/`notes`. Fields can carry ancient twists (送飯暗號, 帽子：方聳而高) as long as they are true. Memos and fields know only what the figure knew at the frozen moment; later events go in `notes`.
 
 Never invent facts (people, places, dates, events). Write in 繁體中文. Timestamps, place lines and phone UI labels (wallet labels, map stops, to-do items) are the phone's own voice and need no source.
 

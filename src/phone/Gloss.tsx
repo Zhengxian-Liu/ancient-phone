@@ -47,7 +47,7 @@ export function GlossPage({ title, entries, onClose }: { title: string; entries:
       </div>
       <h1 className="large-title" style={{ paddingBottom: 2 }}>註釋</h1>
       <div style={{ padding: '0 20px 12px', fontSize: 15, color: 'var(--ios-secondary)' }}>{title}</div>
-      <div className="scroll" style={{ flex: 1, padding: '0 16px 60px', display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <div className="scroll" style={{ flex: 1, padding: '0 16px 60px', display: 'flex', flexDirection: 'column', gap: 12 }} data-noshrink>
         {entries.map((e, i) => (
           <div key={i} style={{ background: '#fff', borderRadius: 12, padding: '14px 16px', display: 'flex', flexDirection: 'column', gap: 10 }}>
             {e.who && <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--ios-secondary)' }}>{e.who}</div>}

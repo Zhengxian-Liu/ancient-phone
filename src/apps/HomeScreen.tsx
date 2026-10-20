@@ -50,6 +50,7 @@ export function HomeScreen() {
         <App label="備忘錄" icon={<AppIcon.notes />} to={{ name: 'notes' }} go={go} />
         <App label="驛遞" icon={<AppIcon.mail />} badge={12} />
         <App label="書冊" icon={<AppIcon.books />} />
+        <App label="通訊錄" icon={<AppIcon.contacts />} to={{ name: 'contacts' }} go={go} />
         <App label="設定" icon={<AppIcon.settings />} />
       </div>
 
@@ -59,7 +60,7 @@ export function HomeScreen() {
 
       {/* Dock */}
       <div className="glass" style={{ position: 'absolute', left: 12, right: 12, bottom: 26, height: 92, borderRadius: 32, background: 'rgba(205,205,210,0.32)', display: 'flex', alignItems: 'center', justifyContent: 'space-around', padding: '0 6px' }}>
-        <DockApp label="電話" icon={<AppIcon.phone />} />
+        <DockApp label="電話" icon={<AppIcon.phone />} onClick={() => go({ name: 'contacts' })} />
         <DockApp label={unread ? `訊息，${unread} 則未讀` : '訊息'} icon={<AppIcon.messages />} badge={unread || undefined} onClick={() => go({ name: 'messages' })} />
         <DockApp label="相簿" icon={<AppIcon.photos />} onClick={() => go({ name: 'photos' })} />
         <DockApp label="地圖" icon={<AppIcon.maps />} onClick={() => go({ name: 'maps' })} />

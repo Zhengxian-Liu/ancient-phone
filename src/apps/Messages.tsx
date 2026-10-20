@@ -50,6 +50,7 @@ export function MessageThread({ threadId }: { threadId: string }) {
   const msgs = thread.messages;
   const lastIsOut = msgs[msgs.length - 1]?.kind === 'out';
   const [glossOpen, setGlossOpen] = useState(false);
+  const contact = figure.contacts.find((c) => c.threadId === thread.id);
   const glossed = msgs.filter(hasNotes).map((m) => ({
     ...m,
     original: m.text,
@@ -75,10 +76,15 @@ export function MessageThread({ threadId }: { threadId: string }) {
         <button className="nav-btn" aria-label="返回訊息" onClick={() => go({ name: 'messages' })} style={{ position: 'absolute', left: 4, top: 58, minWidth: 44 }}>
           {Glyph.chevronLeft()}
         </button>
-        <div style={{ position: 'absolute', left: 96, right: 96, top: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <button
+          className="plain-btn"
+          aria-label={contact ? `${thread.name}的聯絡資訊` : thread.name}
+          onClick={contact ? () => go({ name: 'contact', contactId: contact.id, back: { name: 'thread', threadId: thread.id } }) : undefined}
+          style={{ position: 'absolute', left: 96, right: 96, top: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}
+        >
           <Avatar text={thread.avatar} size={50} />
-          <span style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 11 }}>{thread.name}</span>
-        </div>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 11 }}>{thread.name}{contact && <span style={{ color: 'var(--ios-tertiary)' }}>{Glyph.chevronRight()}</span>}</span>
+        </button>
         <span style={{ position: 'absolute', right: 6, top: 58 }}>
           <GlossButtons canPlain={msgs.some((m) => m.plain)} onNotes={glossed.length ? () => setGlossOpen(true) : undefined} />
         </span>
@@ -115,8 +121,11 @@ function Bubble({ m, prev, next, showRead }: { m: Message; prev?: Message; next?
   // A bubble gets a tail when it ends a run of same-side messages.
   const tail = !next || next.kind !== m.kind;
   const tight = prev && prev.kind === m.kind;
+  // Group threads label the first bubble of each sender's run.
+  const sender = m.kind === 'in' && m.from && !(prev?.kind === 'in' && prev.from === m.from) ? m.from : undefined;
   return (
     <div style={{ alignSelf: out ? 'flex-end' : 'flex-start', maxWidth: '76%', display: 'flex', flexDirection: 'column', alignItems: out ? 'flex-end' : 'flex-start', margin: out ? '0 4px 0 0' : '0 0 0 4px', marginTop: tight ? 2 : 8 }}>
+      {sender && <div style={{ fontSize: 11, color: 'var(--ios-secondary)', padding: '0 0 2px 12px' }}>{sender}</div>}
       <div className={`bubble ${out ? 'out' : 'in'}${tail ? ' tail' : ''}`}>{text}</div>
       {showRead && <div style={{ fontSize: 11, color: 'var(--ios-secondary)', padding: '2px 4px 0 0', fontWeight: 500 }}>已讀</div>}
     </div>

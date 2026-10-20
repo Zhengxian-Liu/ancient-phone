@@ -8,6 +8,7 @@ import { Photos } from '../apps/Photos';
 import { Maps } from '../apps/Maps';
 import { Wallet } from '../apps/Wallet';
 import { Notes } from '../apps/Notes';
+import { ContactsList, ContactCard } from '../apps/Contacts';
 
 export function Phone({ figure }: { figure: Figure }) {
   const [screen, setScreen] = useState<Screen>({ name: 'lock' });
@@ -32,7 +33,7 @@ export function Phone({ figure }: { figure: Figure }) {
   return (
     <PhoneCtx.Provider value={ctx}>
       <div className="screen">
-        <div key={screen.name === 'thread' ? `thread-${screen.threadId}` : screen.name} className={onWallpaper ? 'screen-fill' : 'screen-fill push-in'}>
+        <div key={screen.name === 'thread' ? `thread-${screen.threadId}` : screen.name === 'contact' ? `contact-${screen.contactId}` : screen.name} className={onWallpaper ? 'screen-fill' : 'screen-fill push-in'}>
           {screen.name === 'lock' && <LockScreen />}
           {screen.name === 'home' && <HomeScreen />}
           {screen.name === 'messages' && <MessagesList />}
@@ -41,6 +42,8 @@ export function Phone({ figure }: { figure: Figure }) {
           {screen.name === 'maps' && <Maps />}
           {screen.name === 'wallet' && <Wallet />}
           {screen.name === 'notes' && <Notes />}
+          {screen.name === 'contacts' && <ContactsList />}
+          {screen.name === 'contact' && <ContactCard contactId={screen.contactId} back={screen.back} />}
         </div>
         <SystemChrome color={chrome} clock={figure.moment.clock} />
         <button
