@@ -25,6 +25,7 @@ src/
     Phone.tsx         screen router, Dynamic Island, status bar, home indicator
     PhoneContext.tsx  shared state (current screen, read threads, wallet)
     Gloss.tsx         白話/原文 toggle, 註釋 page and the nav buttons for both
+    Avatar.tsx        cartoon portraits drawn from a contact's `portrait` traits
     icons.tsx         original iOS-style app icons and SF-Symbol-like glyphs
   apps/               one file per app: LockScreen, HomeScreen, Messages,
                       Contacts, Photos, Maps, Wallet, Notes, Wallpaper
@@ -44,6 +45,7 @@ Rules:
 - iMessage: blue `#007AFF` outgoing, `#E9E9EB` incoming, tail only on the last bubble of a run, 2px gap inside a run, 8px between runs, "已讀" under the final outgoing message, conversation opens scrolled to the bottom.
 - **App icons are original art** in the iOS idiom (rounded square, gradient, white glyph). Never copy Apple's icon artwork, wordmarks or the Apple logo. Ancient twists are welcome: 書 on the Messages bubble, a red seal 影 for Photos, a 子午卯酉 clock.
 - No emoji. Glyphs are inline SVG.
+- Contact avatars are cartoon portraits in SVG (`Avatar.tsx`), not historical likenesses. A figure file only lists traits (hat, beard, face, prop); each one needs a basis, given in `portrait.why` and shown on the 註釋 page (陳慥's 方山冠, 梁成's water kettle). Grey out the dead with `faded`.
 - "Photos" from before photography are a single large character (`glyph`) on a colored tile; the info sheet says 裝置：無.
 
 ## Content rules (historical honesty)

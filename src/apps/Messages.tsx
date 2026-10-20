@@ -2,9 +2,15 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import { usePhone } from '../phone/PhoneContext';
 import { GlossButtons, GlossPage, hasNotes, usePlain } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
-import type { Message } from '../types';
+import { Avatar } from '../phone/Avatar';
+import type { Figure, Message, Thread } from '../types';
 
-const avatarBg = 'linear-gradient(#A6ABB6, #858B97)';
+/** A thread's avatar: its contact's portrait, or its members' for a group. */
+function ThreadAvatar({ figure, thread, size }: { figure: Figure; thread: Thread; size: number }) {
+  const contact = figure.contacts.find((c) => c.threadId === thread.id && !thread.members);
+  const members = thread.members?.map((id) => figure.contacts.find((c) => c.id === id)?.portrait).filter((p) => !!p);
+  return <Avatar size={size} text={thread.avatar} portrait={contact?.portrait} members={members} />;
+}
 
 export function MessagesList() {
   const { figure, go, readThreads } = usePhone();
@@ -26,7 +32,7 @@ export function MessagesList() {
               <span style={{ flex: 'none', width: 20, display: 'flex', justifyContent: 'center' }}>
                 {unread && <span aria-label="未讀" style={{ width: 10, height: 10, borderRadius: 5, background: 'var(--ios-blue)' }} />}
               </span>
-              <Avatar text={t.avatar} size={52} />
+              <ThreadAvatar figure={figure} thread={t} size={52} />
               <span style={{ flex: 1, minWidth: 0, marginLeft: 12, padding: '11px 16px 11px 0', borderBottom: '0.5px solid var(--ios-separator)', display: 'flex', flexDirection: 'column', gap: 2 }}>
                 <span style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
                   <span style={{ fontWeight: 600, fontSize: 17 }}>{t.name}</span>
@@ -82,7 +88,7 @@ export function MessageThread({ threadId }: { threadId: string }) {
           onClick={contact ? () => go({ name: 'contact', contactId: contact.id, back: { name: 'thread', threadId: thread.id } }) : undefined}
           style={{ position: 'absolute', left: 96, right: 96, top: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}
         >
-          <Avatar text={thread.avatar} size={50} />
+          <ThreadAvatar figure={figure} thread={thread} size={50} />
           <span style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 11 }}>{thread.name}{contact && <span style={{ color: 'var(--ios-tertiary)' }}>{Glyph.chevronRight()}</span>}</span>
         </button>
         <span style={{ position: 'absolute', right: 6, top: 58 }}>
@@ -129,13 +135,5 @@ function Bubble({ m, prev, next, showRead }: { m: Message; prev?: Message; next?
       <div className={`bubble ${out ? 'out' : 'in'}${tail ? ' tail' : ''}`}>{text}</div>
       {showRead && <div style={{ fontSize: 11, color: 'var(--ios-secondary)', padding: '2px 4px 0 0', fontWeight: 500 }}>已讀</div>}
     </div>
-  );
-}
-
-function Avatar({ text, size }: { text: string; size: number }) {
-  return (
-    <span style={{ flex: 'none', width: size, height: size, borderRadius: size / 2, background: avatarBg, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.43, fontWeight: 500 }}>
-      {text}
-    </span>
   );
 }

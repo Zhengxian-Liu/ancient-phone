@@ -63,10 +63,32 @@ export type Message = (
 export interface Thread {
   id: string;
   name: string;
-  avatar: string; // one character
+  avatar: string; // one character, used when no contact portrait applies
+  /** Group threads: contact ids whose portraits make up the group avatar. */
+  members?: string[];
   when: string; // shown in the list
   unread?: boolean;
   messages: Message[];
+}
+
+/**
+ * A cartoon portrait, drawn by <Avatar>. Every trait should have a basis
+ * (rank, a source, the person's story); say what it is in `why`.
+ */
+export interface Portrait {
+  bg: [string, string];
+  robe: string;
+  /** Headwear: 軟腳幞頭, 展腳幞頭 (officials on duty), 方山冠, 頭巾, women's 髻, a recluse's 髻. */
+  hat: 'futou' | 'zhanjiao' | 'fangshan' | 'jin' | 'bun' | 'topknot';
+  hair?: 'black' | 'grey';
+  beard?: 'long' | 'short' | 'none';
+  face?: 'calm' | 'smile' | 'laugh' | 'sad' | 'stern';
+  young?: boolean;
+  prop?: 'bamboo' | 'hu' | 'kettle' | 'coins' | 'scroll' | 'foodbox' | 'cup' | 'brush';
+  /** Grey the portrait out (the person has died). */
+  faded?: boolean;
+  /** Basis for the traits, listed on the 註釋 page. */
+  why?: string;
 }
 
 /**
@@ -77,7 +99,8 @@ export interface Thread {
 export interface Contact extends Gloss {
   id: string;
   name: string;
-  avatar: string; // one character
+  avatar: string; // one character, the fallback when there is no portrait
+  portrait?: Portrait;
   /** Under the name, e.g. 字子由 · 弟弟 */
   subtitle: string;
   /** Section in the list, e.g. 家人 / 朋友 / 御史臺. */

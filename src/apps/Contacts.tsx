@@ -2,9 +2,8 @@ import { useState, type ReactNode } from 'react';
 import { usePhone, type Screen } from '../phone/PhoneContext';
 import { Glyph } from '../phone/icons';
 import { GlossButtons, GlossPage, hasNotes } from '../phone/Gloss';
+import { Avatar } from '../phone/Avatar';
 import type { Contact } from '../types';
-
-const avatarBg = 'linear-gradient(#A6ABB6, #858B97)';
 
 export function ContactsList() {
   const { figure, go } = usePhone();
@@ -22,7 +21,7 @@ export function ContactsList() {
       <div className="search-field">{Glyph.search()}搜尋</div>
       <div className="scroll" style={{ flex: 1, paddingBottom: 34 }}>
         <button className="plain-btn" onClick={() => open(figure.me)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 14, padding: '8px 20px 14px', borderBottom: '0.5px solid var(--ios-separator)' }}>
-          <Avatar text={figure.me.avatar} size={60} />
+          <Avatar text={figure.me.avatar} portrait={figure.me.portrait} size={60} />
           <span style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <span style={{ fontSize: 20, fontWeight: 600 }}>{figure.me.name}</span>
             <span style={{ fontSize: 13, color: 'var(--ios-secondary)' }}>我的名片</span>
@@ -32,9 +31,12 @@ export function ContactsList() {
           <div key={g}>
             <div style={{ padding: '14px 20px 4px', fontSize: 15, fontWeight: 600, color: 'var(--ios-secondary)' }}>{g}</div>
             {figure.contacts.filter((c) => c.group === g).map((c) => (
-              <button key={c.id} className="plain-btn" onClick={() => open(c)} style={{ width: '100%', display: 'flex', alignItems: 'baseline', gap: 8, margin: '0 0 0 20px', padding: '11px 20px 11px 0', borderBottom: '0.5px solid var(--ios-separator-light)' }}>
+              <button key={c.id} className="plain-btn" onClick={() => open(c)} style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 12, padding: '0 0 0 20px' }}>
+                <Avatar text={c.avatar} portrait={c.portrait} size={40} />
+                <span style={{ flex: 1, display: 'flex', alignItems: 'baseline', gap: 8, padding: '14px 20px 14px 0', borderBottom: '0.5px solid var(--ios-separator-light)' }}>
                 <span style={{ fontSize: 17, fontWeight: 600 }}>{c.name}</span>
                 <span style={{ fontSize: 15, color: 'var(--ios-secondary)' }}>{c.status ?? ''}</span>
+                </span>
               </button>
             ))}
           </div>
@@ -59,11 +61,11 @@ export function ContactCard({ contactId, back }: { contactId: string; back?: Scr
       <div className="status-spacer" />
       <div style={{ height: 44, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
         <button className="nav-btn" onClick={() => go(backTo)}>{Glyph.chevronLeft()}{backLabel}</button>
-        {hasNotes(c) ? <GlossButtons canPlain={false} onNotes={() => setGlossOpen(true)} /> : <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>}
+        {hasNotes(c) || c.portrait?.why ? <GlossButtons canPlain={false} onNotes={() => setGlossOpen(true)} /> : <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>}
       </div>
       <div className="scroll" style={{ flex: 1, padding: '0 16px 60px', display: 'flex', flexDirection: 'column', gap: 14 }} data-noshrink>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '4px 0 2px' }}>
-          <Avatar text={c.avatar} size={96} />
+          <Avatar text={c.avatar} portrait={c.portrait} size={110} />
           <div style={{ fontSize: 28, fontWeight: 700, marginTop: 4 }}>{c.name}</div>
           <div style={{ fontSize: 15, color: 'var(--ios-secondary)', textAlign: 'center' }}>{c.subtitle}</div>
           {c.status && <div style={{ fontSize: 13, fontWeight: 600, color: blocked ? 'var(--ios-red)' : 'var(--ios-secondary)' }}>{c.status}</div>}
@@ -103,7 +105,7 @@ export function ContactCard({ contactId, back }: { contactId: string; back?: Scr
         )}
       </div>
 
-      {glossOpen && <GlossPage title={c.name} entries={[{ ...c, original: c.memo ?? c.subtitle }]} onClose={() => setGlossOpen(false)} />}
+      {glossOpen && <GlossPage title={c.name} entries={[{ ...c, original: c.memo ?? c.subtitle, notes: [...(c.notes ?? []), ...(c.portrait?.why ? [`頭像：${c.portrait.why}`] : [])] }]} onClose={() => setGlossOpen(false)} />}
     </div>
   );
 }
@@ -124,11 +126,3 @@ const MsgGlyph = () => <svg {...svg}><path d="M12 3C6.5 3 2 6.6 2 11c0 2.5 1.4 4
 const PhoneGlyph = () => <svg {...svg}><path d="M6.6 3h2.6l1.9 4.7-2.3 1.5a11 11 0 0 0 6 6l1.5-2.3L21 14.8v2.6A2.6 2.6 0 0 1 18.4 20 15.4 15.4 0 0 1 4 5.6 2.6 2.6 0 0 1 6.6 3z" /></svg>;
 const VideoGlyph = () => <svg {...svg}><rect x="2" y="6" width="14" height="12" rx="3" /><path d="M17 10l5-3v10l-5-3z" /></svg>;
 const MailGlyph = () => <svg {...svg}><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm0 2.2V18h18V7.2l-9 6z" /></svg>;
-
-export function Avatar({ text, size }: { text: string; size: number }) {
-  return (
-    <span style={{ flex: 'none', width: size, height: size, borderRadius: size / 2, background: avatarBg, color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: size * 0.43, fontWeight: 500 }}>
-      {text}
-    </span>
-  );
-}
