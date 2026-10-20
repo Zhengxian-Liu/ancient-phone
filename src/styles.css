@@ -1,0 +1,114 @@
+/* iOS system tokens (light mode). Keep values aligned with Apple HIG system colors. */
+:root {
+  --ios-blue: #007aff;
+  --ios-red: #ff3b30;
+  --ios-green: #34c759;
+  --ios-label: #000000;
+  --ios-secondary: #6c6c70;
+  --ios-tertiary: #8a8a8e;
+  --ios-separator: #c6c6c8;
+  --ios-separator-light: #d1d1d6;
+  --ios-bg-grouped: #f2f2f7;
+  --ios-fill: #eeeef0;
+  --ios-bubble-in: #e9e9eb;
+  --notes-accent: #a06e00;
+
+  --phone-w: 393px;
+  --phone-h: 852px;
+
+  --font-ui: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'PingFang TC', 'Noto Sans TC', sans-serif;
+  --font-glyph: 'Noto Serif TC', 'Songti TC', serif;
+}
+
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; height: 100%; }
+body {
+  background: #111111;
+  color: var(--ios-label);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+button { font-family: inherit; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+/* ---------- stage: centers and scales the device ---------- */
+.stage {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.device {
+  width: calc(var(--phone-w) + 24px);
+  height: calc(var(--phone-h) + 24px);
+  padding: 12px;
+  border-radius: 67px;
+  background: #1c1c1e;
+  box-shadow: 0 0 0 2px #3a3a3c, 0 30px 80px rgba(0, 0, 0, 0.6);
+  transform-origin: center center;
+}
+.screen {
+  position: relative;
+  width: var(--phone-w);
+  height: var(--phone-h);
+  border-radius: 55px;
+  overflow: hidden;
+  background: #000;
+}
+/* On a real phone, drop the bezel and fill the viewport. */
+@media (max-width: 500px) {
+  .device { padding: 0; border-radius: 0; background: none; box-shadow: none; width: var(--phone-w); height: var(--phone-h); }
+  .screen { border-radius: 0; }
+}
+
+.toolbar {
+  position: fixed; top: 16px; right: 16px;
+  display: flex; gap: 8px; z-index: 10;
+}
+.toolbar button {
+  height: 32px; padding: 0 12px; border-radius: 16px;
+  border: 1px solid #3a3a3c; background: #1c1c1e; color: #e5e5ea; font-size: 13px;
+}
+.toolbar button[aria-pressed='true'] { background: #e5e5ea; color: #1c1c1e; }
+@media (max-width: 500px) { .toolbar { display: none; } }
+
+/* ---------- shared iOS pieces ---------- */
+.screen-fill { position: absolute; inset: 0; }
+.glass { -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); }
+.scroll { overflow-y: auto; scrollbar-width: none; }
+.scroll::-webkit-scrollbar { display: none; }
+.plain-btn { background: none; border: 0; padding: 0; text-align: left; }
+.large-title { margin: 0; padding: 2px 16px 8px; font-size: 34px; font-weight: 700; letter-spacing: 0.3px; }
+.search-field {
+  margin: 0 16px 8px; height: 36px; border-radius: 10px; background: var(--ios-fill);
+  display: flex; align-items: center; gap: 6px; padding: 0 8px; color: var(--ios-secondary); font-size: 17px;
+}
+.nav-btn {
+  min-height: 44px; display: flex; align-items: center; gap: 4px;
+  background: none; border: 0; padding: 0 8px; font-size: 17px; color: var(--ios-blue);
+}
+.src { font-size: 11px; color: var(--ios-secondary); }
+.status-spacer { height: 54px; flex: none; }
+
+/* ---------- iMessage bubbles with tails ---------- */
+.bubble { position: relative; border-radius: 18px; padding: 7px 12px; font-size: 17px; line-height: 1.35; white-space: pre-line; }
+.bubble.in { background: var(--ios-bubble-in); color: #000; }
+.bubble.out { background: var(--ios-blue); color: #fff; }
+.bubble.tail.in::before { content: ''; position: absolute; bottom: 0; left: -7px; width: 20px; height: 20px; background: var(--ios-bubble-in); border-bottom-right-radius: 16px 14px; }
+.bubble.tail.in::after { content: ''; position: absolute; bottom: 0; left: -26px; width: 26px; height: 20px; background: #fff; border-bottom-right-radius: 10px; }
+.bubble.tail.out::before { content: ''; position: absolute; bottom: 0; right: -7px; width: 20px; height: 20px; background: var(--ios-blue); border-bottom-left-radius: 16px 14px; }
+.bubble.tail.out::after { content: ''; position: absolute; bottom: 0; right: -26px; width: 26px; height: 20px; background: #fff; border-bottom-left-radius: 10px; }
+
+/* ---------- app icons ---------- */
+.app-icon { width: 60px; height: 60px; border-radius: 14px; display: flex; align-items: center; justify-content: center; position: relative; }
+.app-label { font-size: 12px; color: #fff; text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4); }
+.badge {
+  position: absolute; top: -6px; right: -6px; min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 11px; background: var(--ios-red); color: #fff; font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* simple screen transition */
+.push-in { animation: push 220ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes push { from { transform: translateX(24px); opacity: 0.6; } to { transform: none; opacity: 1; } }
+.zoom-in { animation: zoom 260ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+@keyframes zoom { from { transform: scale(0.92); opacity: 0; } to { transform: none; opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .push-in, .zoom-in { animation: none; } }

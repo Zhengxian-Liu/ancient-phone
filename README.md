@@ -1,0 +1,42 @@
+# 古人的手機 · Ancient Phone
+
+一支高度仿真的 iPhone，裡面裝的是古人的生活。
+
+第一支：**蘇軾的 iPhone**，時間停在元豐三年二月初一（1080）——烏臺詩案出獄後，他剛到黃州的那天。
+
+<p>
+  <img src="docs/1-lock.png" width="200" alt="鎖定畫面">
+  <img src="docs/2-home.png" width="200" alt="主畫面">
+  <img src="docs/4-thread.png" width="200" alt="與子由的對話">
+  <img src="docs/9-wallet.png" width="200" alt="錢包：屋梁錢">
+</p>
+
+- **鎖定畫面**：子由的未讀訊息、「官俸已停止入帳」的錢包通知
+- **訊息**：獄中訣別詩、送魚暗號、岐亭偶遇方山子
+- **相簿**：一〇八〇年沒有相機，每張照片是一個字：湖、烏、獄、陳、岐、江…
+- **地圖**：湖州押解入京 → 汴京出獄 → 南下黃州
+- **錢包**：〈答秦太虛書〉的屋梁錢——四千五百錢分三十份，每天用畫叉挑一份
+- **備忘錄**：到黃州待辦清單、〈卜算子〉草稿
+
+每則內容都標了出處：「原文」引自詩文，「轉譯」為依史料改寫。右上角「顯示出處」可開關。
+
+## 執行
+
+```bash
+npm install
+npm run dev
+```
+
+打開 http://localhost:5173 。用 `?figure=<id>` 切換人物。
+
+## 新增人物
+
+見 [CLAUDE.md](./CLAUDE.md#adding-a-figure)。所有內容都在 `src/figures/<id>.ts`，UI 元件不含任何人物資料。
+
+## 部署
+
+`npm run build` 產出的 `dist/` 是純靜態網站，可放在任何靜態主機。repo 內附 GitHub Pages workflow（`.github/workflows/pages.yml`，手動觸發）；公開 repo 或付費方案可直接使用。
+
+---
+
+App 圖示為原創設計，僅借用 iOS 的視覺語彙，非 Apple 官方素材。
