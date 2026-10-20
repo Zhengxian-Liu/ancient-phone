@@ -61,7 +61,7 @@ export function ContactCard({ contactId, back }: { contactId: string; back?: Scr
       <div className="status-spacer" />
       <div style={{ height: 44, flex: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
         <button className="nav-btn" onClick={() => go(backTo)}>{Glyph.chevronLeft()}{backLabel}</button>
-        {hasNotes(c) || c.portrait?.why ? <GlossButtons canPlain={false} onNotes={() => setGlossOpen(true)} /> : <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>}
+        {hasNotes(c) || c.portrait ? <GlossButtons canPlain={false} onNotes={() => setGlossOpen(true)} /> : <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>}
       </div>
       <div className="scroll" style={{ flex: 1, padding: '0 16px 60px', display: 'flex', flexDirection: 'column', gap: 14 }} data-noshrink>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, padding: '4px 0 2px' }}>
@@ -105,7 +105,7 @@ export function ContactCard({ contactId, back }: { contactId: string; back?: Scr
         )}
       </div>
 
-      {glossOpen && <GlossPage title={c.name} entries={[{ ...c, original: c.memo ?? c.subtitle, notes: [...(c.notes ?? []), ...(c.portrait?.why ? [`頭像：${c.portrait.why}`] : [])] }]} onClose={() => setGlossOpen(false)} />}
+      {glossOpen && <GlossPage title={c.name} entries={[{ ...c, original: c.memo ?? c.subtitle, notes: [...(c.notes ?? []), ...(c.portrait ? [`頭像：AI 生成的想像畫像，不是真實容貌。${c.portrait.why ?? ''}`] : [])] }]} onClose={() => setGlossOpen(false)} />}
     </div>
   );
 }
