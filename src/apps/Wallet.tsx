@@ -1,4 +1,6 @@
-import { usePhone, Src } from '../phone/PhoneContext';
+import { useState } from 'react';
+import { usePhone } from '../phone/PhoneContext';
+import { GlossPage, hasGloss } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 
 const fmt = (n: number) => n.toLocaleString('en-US');
@@ -6,6 +8,7 @@ const fmt = (n: number) => n.toLocaleString('en-US');
 export function Wallet() {
   const { figure, walletTaken, setWalletTaken } = usePhone();
   const w = figure.wallet;
+  const [glossOpen, setGlossOpen] = useState(false);
   const balance = w.main.monthlyTotal - (walletTaken ? w.main.dailyAllowance : 0);
   const left = w.main.parts - (walletTaken ? 1 : 0);
   const grad = (g: [string, string]) => `linear-gradient(135deg, ${g[0]}, ${g[1]})`;
@@ -78,8 +81,16 @@ export function Wallet() {
             ))}
           </div>
         </div>
-        <Src text={w.footnote} style={{ fontSize: 12, lineHeight: 1.6, padding: '0 4px' }} />
+        {w.quote && (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 2, padding: '0 4px' }}>
+            <div style={{ fontSize: 13, lineHeight: 1.6, color: 'var(--ios-secondary)' }}>{w.quote.text}</div>
+            {hasGloss(w.quote) && (
+              <button className="nav-btn" onClick={() => setGlossOpen(true)} style={{ padding: 0, fontSize: 15 }}>白話註釋</button>
+            )}
+          </div>
+        )}
       </div>
+      {glossOpen && w.quote && <GlossPage title={w.main.title} entries={[{ ...w.quote, original: w.quote.text }]} onClose={() => setGlossOpen(false)} />}
     </div>
   );
 }

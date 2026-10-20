@@ -59,17 +59,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; -webkit-tap-high
   .screen { border-radius: 0; }
 }
 
-.toolbar {
-  position: fixed; top: 16px; right: 16px;
-  display: flex; gap: 8px; z-index: 10;
-}
-.toolbar button {
-  height: 32px; padding: 0 12px; border-radius: 16px;
-  border: 1px solid #3a3a3c; background: #1c1c1e; color: #e5e5ea; font-size: 13px;
-}
-.toolbar button[aria-pressed='true'] { background: #e5e5ea; color: #1c1c1e; }
-@media (max-width: 500px) { .toolbar { display: none; } }
-
 /* ---------- shared iOS pieces ---------- */
 .screen-fill { position: absolute; inset: 0; }
 .glass { -webkit-backdrop-filter: blur(24px) saturate(180%); backdrop-filter: blur(24px) saturate(180%); }
@@ -85,7 +74,6 @@ button { font-family: inherit; color: inherit; cursor: pointer; -webkit-tap-high
   min-height: 44px; display: flex; align-items: center; gap: 4px;
   background: none; border: 0; padding: 0 8px; font-size: 17px; color: var(--ios-blue);
 }
-.src { font-size: 11px; color: var(--ios-secondary); }
 .status-spacer { height: 54px; flex: none; }
 
 /* ---------- iMessage bubbles with tails ---------- */

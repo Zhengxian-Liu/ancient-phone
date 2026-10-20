@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { usePhone, Src } from '../phone/PhoneContext';
+import { usePhone } from '../phone/PhoneContext';
+import { GlossButton, GlossPage, hasGloss } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 
 export function Notes() {
   const { figure, go } = usePhone();
   const [open, setOpen] = useState<number | null>(null);
+  const [glossOpen, setGlossOpen] = useState(false);
   const notes = figure.notes;
+  const note = open !== null ? notes[open] : undefined;
 
   return (
     <div className="screen-fill" style={{ background: 'var(--ios-bg-grouped)', display: 'flex', flexDirection: 'column' }}>
@@ -30,14 +33,19 @@ export function Notes() {
         <span role="img" aria-label="新增備忘錄" style={{ position: 'absolute', right: 20, top: 8 }}>{Glyph.compose('var(--notes-accent)')}</span>
       </div>
 
-      {open !== null && (
+      {note && (
         <div className="screen-fill push-in" style={{ background: '#fff', display: 'flex', flexDirection: 'column', zIndex: 5 }}>
           <div className="status-spacer" />
           <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
             <button className="nav-btn" style={{ color: 'var(--notes-accent)' }} onClick={() => setOpen(null)}>{Glyph.chevronLeft('var(--notes-accent)')}備忘錄</button>
-            <span style={{ padding: '0 12px', color: 'var(--notes-accent)', fontSize: 17, fontWeight: 600 }}>完成</span>
+            {hasGloss(note) ? (
+              <GlossButton color="var(--notes-accent)" onClick={() => setGlossOpen(true)} />
+            ) : (
+              <span style={{ padding: '0 12px', color: 'var(--notes-accent)', fontSize: 17, fontWeight: 600 }}>完成</span>
+            )}
           </div>
-          <NoteBody index={open} />
+          <NoteBody index={open!} />
+          {glossOpen && <GlossPage title={note.title} entries={[{ ...note, original: note.body ?? '' }]} onClose={() => setGlossOpen(false)} />}
         </div>
       )}
     </div>
@@ -62,7 +70,6 @@ function NoteBody({ index }: { index: number }) {
         </div>
       )}
       {n.body && <div style={{ fontSize: 17, lineHeight: 1.9, whiteSpace: 'pre-line' }}>{n.body}</div>}
-      <Src text={n.src} style={{ fontSize: 12 }} />
     </div>
   );
 }

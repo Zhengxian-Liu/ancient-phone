@@ -23,11 +23,12 @@ src/
     sushi.ts          蘇軾 content (all text, dates, colors, map paths)
   phone/
     Phone.tsx         screen router, Dynamic Island, status bar, home indicator
-    PhoneContext.tsx  shared state (current screen, read threads, wallet) + <Src>
+    PhoneContext.tsx  shared state (current screen, read threads, wallet)
+    Gloss.tsx         白話註釋 page + the nav button that opens it
     icons.tsx         original iOS-style app icons and SF-Symbol-like glyphs
   apps/               one file per app: LockScreen, HomeScreen, Messages,
                       Photos, Maps, Wallet, Notes, Wallpaper
-  App.tsx             scales the 393×852 device to the viewport; "顯示出處" toggle
+  App.tsx             scales the 393×852 device to the viewport
   styles.css          iOS system color tokens, bubble tails, shared classes
 ```
 
@@ -47,13 +48,14 @@ Rules:
 
 ## Content rules (historical honesty)
 
-Every message, photo, note and footnote carries a `src` label, shown when 顯示出處 is on:
-- `原文 · 〈篇名〉` — quoted verbatim from a primary source. Double-check the wording; abridge with （節錄）.
-- `轉譯 · 據〈篇名〉` — a modern rewrite grounded in a named source.
-- `轉譯` — paraphrase of well-attested events.
-- If you move something in time for effect, say so in `src` (see the 卜算子 note).
+**The phone shows only original text.** Every message bubble, photo caption, note body and wallet passage is quoted verbatim from a primary source. If a scene has no surviving words, leave it out (or use a narration line from a source as a centered `system` message) — never write modern dialogue for it.
 
-Never invent facts (people, places, dates, events). Invented *wording* is fine only when labelled 轉譯. Write in 繁體中文. Keep modern chat register for 轉譯 lines ("到了。先住定惠院") and original text for 原文 — the clash is the point.
+Everything explanatory goes in the item's `Gloss` and appears only on the 白話註釋 page (a nav-bar button on each thread, photo, note and the wallet):
+- `src` — `原文 · 〈篇名〉`; abridge with （節錄）. Double-check the wording against the source.
+- `plain` — the 白話 rendering.
+- `notes` — context, word glosses, variant readings, and caveats: who the text was really addressed to, how sure the dating is, and any moment you shifted in time for effect (see the 卜算子 note).
+
+Never invent facts (people, places, dates, events). Write in 繁體中文. Timestamps, place lines and phone UI labels (wallet labels, map stops, to-do items) are the phone's own voice and need no source.
 
 ## Adding a figure
 

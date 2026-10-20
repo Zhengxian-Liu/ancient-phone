@@ -9,7 +9,7 @@ import { Maps } from '../apps/Maps';
 import { Wallet } from '../apps/Wallet';
 import { Notes } from '../apps/Notes';
 
-export function Phone({ figure, showSources }: { figure: Figure; showSources: boolean }) {
+export function Phone({ figure }: { figure: Figure }) {
   const [screen, setScreen] = useState<Screen>({ name: 'lock' });
   const [readThreads, setRead] = useState<Set<string>>(new Set());
   const [walletTaken, setWalletTaken] = useState(false);
@@ -20,9 +20,9 @@ export function Phone({ figure, showSources }: { figure: Figure; showSources: bo
   };
 
   const ctx = useMemo(
-    () => ({ figure, showSources, screen, go, readThreads, walletTaken, setWalletTaken }),
+    () => ({ figure, screen, go, readThreads, walletTaken, setWalletTaken }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [figure, showSources, screen, readThreads, walletTaken],
+    [figure, screen, readThreads, walletTaken],
   );
 
   const onWallpaper = screen.name === 'lock' || screen.name === 'home';

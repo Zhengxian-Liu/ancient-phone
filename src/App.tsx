@@ -4,7 +4,6 @@ import { pickFigure } from './figures';
 
 export function App() {
   const [figure] = useState(pickFigure);
-  const [showSources, setShowSources] = useState(true);
   const scale = useFitScale();
 
   useEffect(() => {
@@ -13,14 +12,9 @@ export function App() {
 
   return (
     <>
-      <div className="toolbar">
-        <button aria-pressed={showSources} onClick={() => setShowSources((v) => !v)}>
-          顯示出處
-        </button>
-      </div>
       <div className="stage">
         <div className="device" style={{ transform: `scale(${scale})` }}>
-          <Phone figure={figure} showSources={showSources} />
+          <Phone figure={figure} />
         </div>
       </div>
     </>

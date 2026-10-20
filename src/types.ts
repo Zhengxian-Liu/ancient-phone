@@ -2,13 +2,20 @@
  * A Figure is everything one historical person's phone shows.
  * Components never hard-code a person: they read only from this shape.
  *
- * `src` on any item is its provenance label, shown under the content when
- * "顯示出處" is on. Convention:
- *   "原文 · 〈篇名〉"   — the text is quoted from a primary source
- *   "轉譯 · 據〈篇名〉" — the text is a modern paraphrase grounded in a source
- *   "轉譯"            — paraphrase of well-attested events, no single source
+ * The phone shows only original text. Everything that explains it lives in a
+ * Gloss and appears on the 白話註釋 page, opened from a button.
  */
 export type Source = string;
+
+/** Explanation of one piece of original text, shown only on the 白話註釋 page. */
+export interface Gloss {
+  /** Provenance, e.g. "原文 · 〈初到黃州〉（節錄）". */
+  src?: Source;
+  /** 白話: a modern-language rendering. */
+  plain?: string;
+  /** 註釋: context, word glosses, dating caveats. */
+  notes?: string[];
+}
 
 export interface Figure {
   id: string;
@@ -44,9 +51,11 @@ export interface LockNotification {
   threadId?: string;
 }
 
-export type Message =
-  | { kind: 'system'; text: string } // centered timestamp/divider; "粗體 · 細字"
-  | { kind: 'in' | 'out'; text: string; src?: Source };
+export type Message = (
+  | { kind: 'system'; text: string } // centered timestamp/divider ("粗體 · 細字") or a line of narration
+  | { kind: 'in' | 'out'; text: string }
+) &
+  Gloss;
 
 export interface Thread {
   id: string;
@@ -57,15 +66,15 @@ export interface Thread {
   messages: Message[];
 }
 
-export interface Photo {
+export interface Photo extends Gloss {
   glyph: string; // one character standing in for the image
   title: string;
   place: string;
   date: string;
   bg: string;
   fg: string;
+  /** Caption: an original passage about this moment. */
   desc: string;
-  src?: Source;
 }
 
 export interface MapData {
@@ -97,14 +106,14 @@ export interface WalletData {
   takeLabel: string;
   takenLabel: string;
   transactions: { badge: string; color: string; title: string; sub: string; amount: string }[];
-  footnote?: Source;
+  /** The original passage the wallet is built on. */
+  quote?: { text: string } & Gloss;
 }
 
-export interface Note {
+export interface Note extends Gloss {
   title: string;
   preview: string;
   header: string; // centered date line inside the note
   checklist?: { text: string; done?: boolean }[];
   body?: string; // preformatted text, \n preserved
-  src?: Source;
 }

@@ -13,7 +13,6 @@ export type Screen =
 
 export interface PhoneState {
   figure: Figure;
-  showSources: boolean;
   screen: Screen;
   go: (s: Screen) => void;
   readThreads: Set<string>;
@@ -27,11 +26,4 @@ export function usePhone(): PhoneState {
   const ctx = useContext(PhoneCtx);
   if (!ctx) throw new Error('usePhone must be used inside <Phone>');
   return ctx;
-}
-
-/** Renders a provenance label when sources are switched on. */
-export function Src({ text, style }: { text?: string; style?: React.CSSProperties }) {
-  const { showSources } = usePhone();
-  if (!showSources || !text) return null;
-  return <div className="src" style={style}>{text}</div>;
 }

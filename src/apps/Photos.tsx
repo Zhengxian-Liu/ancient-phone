@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { usePhone, Src } from '../phone/PhoneContext';
+import { usePhone } from '../phone/PhoneContext';
+import { GlossButton, GlossPage, hasGloss } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 
 export function Photos() {
@@ -44,6 +45,7 @@ export function Photos() {
 function PhotoViewer({ index, onClose }: { index: number; onClose: () => void }) {
   const { figure } = usePhone();
   const p = figure.photos[index];
+  const [glossOpen, setGlossOpen] = useState(false);
   const rows: [string, string][] = [
     ['裝置', '無（當時尚無相機）'],
     ['地點', p.place],
@@ -58,7 +60,7 @@ function PhotoViewer({ index, onClose }: { index: number; onClose: () => void })
           <span style={{ fontSize: 15, fontWeight: 600 }}>{p.place}</span>
           <span style={{ fontSize: 12, color: 'var(--ios-secondary)' }}>{p.date}</span>
         </span>
-        <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>
+        {hasGloss(p) ? <GlossButton onClick={() => setGlossOpen(true)} /> : <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>}
       </div>
       <div className="scroll" style={{ flex: 1, paddingBottom: 96 }}>
         <div style={{ width: 393, height: 393, background: p.bg, color: p.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -74,7 +76,6 @@ function PhotoViewer({ index, onClose }: { index: number; onClose: () => void })
               </div>
             ))}
           </div>
-          <Src text={p.src} style={{ fontSize: 12 }} />
         </div>
       </div>
       <div style={{ position: 'absolute', left: 0, right: 0, bottom: 34, height: 50, display: 'flex', justifyContent: 'space-around', alignItems: 'center', background: 'rgba(255,255,255,0.96)', borderTop: '0.5px solid var(--ios-separator-light)' }}>
@@ -83,6 +84,7 @@ function PhotoViewer({ index, onClose }: { index: number; onClose: () => void })
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--ios-blue)" strokeWidth="1.8" strokeLinecap="round" role="img" aria-label="資訊"><circle cx="12" cy="12" r="10" /><path d="M12 11v6" /><path d="M12 7.5v.01" /></svg>
         <svg width="22" height="24" viewBox="0 0 22 24" fill="none" stroke="var(--ios-blue)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" role="img" aria-label="刪除"><path d="M2 5h18" /><path d="M8 5V2h6v3" /><path d="M4 5l1 17h12l1-17" /></svg>
       </div>
+      {glossOpen && <GlossPage title={p.title} entries={[{ ...p, original: p.desc }]} onClose={() => setGlossOpen(false)} />}
     </div>
   );
 }

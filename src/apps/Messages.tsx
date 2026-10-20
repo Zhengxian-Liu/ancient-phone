@@ -1,12 +1,13 @@
-import { useLayoutEffect, useRef } from 'react';
-import { usePhone, Src } from '../phone/PhoneContext';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { usePhone } from '../phone/PhoneContext';
+import { GlossButton, GlossPage, hasGloss } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 import type { Message } from '../types';
 
 const avatarBg = 'linear-gradient(#A6ABB6, #858B97)';
 
 export function MessagesList() {
-  const { figure, go, readThreads, showSources } = usePhone();
+  const { figure, go, readThreads } = usePhone();
   return (
     <div className="screen-fill" style={{ background: '#fff', display: 'flex', flexDirection: 'column' }}>
       <div className="status-spacer" />
@@ -38,11 +39,6 @@ export function MessagesList() {
             </button>
           );
         })}
-        {showSources && (
-          <div style={{ padding: '16px 20px', fontSize: 12, lineHeight: 1.6, color: 'var(--ios-secondary)' }}>
-            對話中標「原文」者引自原始詩文；標「轉譯」者依史料改寫成白話訊息。
-          </div>
-        )}
       </div>
     </div>
   );
@@ -53,6 +49,12 @@ export function MessageThread({ threadId }: { threadId: string }) {
   const thread = figure.threads.find((t) => t.id === threadId) ?? figure.threads[0];
   const msgs = thread.messages;
   const lastIsOut = msgs[msgs.length - 1]?.kind === 'out';
+  const [glossOpen, setGlossOpen] = useState(false);
+  const glossed = msgs.filter(hasGloss).map((m) => ({
+    ...m,
+    original: m.text,
+    who: m.kind === 'out' ? figure.name : m.kind === 'in' ? thread.name : undefined,
+  }));
   // Like iMessage, open a conversation scrolled to the newest message.
   const scroller = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {
@@ -73,13 +75,15 @@ export function MessageThread({ threadId }: { threadId: string }) {
         <button className="nav-btn" aria-label="返回訊息" onClick={() => go({ name: 'messages' })} style={{ position: 'absolute', left: 4, top: 58, minWidth: 44 }}>
           {Glyph.chevronLeft()}
         </button>
-        <div style={{ position: 'absolute', left: 64, right: 64, top: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
+        <div style={{ position: 'absolute', left: 96, right: 96, top: 52, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
           <Avatar text={thread.avatar} size={50} />
           <span style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 11 }}>{thread.name}</span>
         </div>
-        <span role="img" aria-label="視訊通話" style={{ position: 'absolute', right: 16, top: 68 }}>
-          <svg width="28" height="20" viewBox="0 0 28 20" fill="none" stroke="var(--ios-blue)" strokeWidth="1.8" strokeLinejoin="round" aria-hidden="true"><rect x="1" y="3" width="18" height="14" rx="3.5" /><path d="M19 8l7-4v12l-7-4z" /></svg>
-        </span>
+        {glossed.length > 0 && (
+          <span style={{ position: 'absolute', right: 4, top: 58 }}>
+            <GlossButton onClick={() => setGlossOpen(true)} />
+          </span>
+        )}
       </div>
 
       {/* Input bar */}
@@ -90,6 +94,8 @@ export function MessageThread({ threadId }: { threadId: string }) {
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--ios-tertiary)" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5.5 11a6.5 6.5 0 0 0 13 0" /><path d="M12 17.5V21" /></svg>
         </span>
       </div>
+
+      {glossOpen && <GlossPage title={`與${thread.name}的對話`} entries={glossed} onClose={() => setGlossOpen(false)} />}
     </div>
   );
 }
@@ -97,6 +103,9 @@ export function MessageThread({ threadId }: { threadId: string }) {
 function Bubble({ m, prev, next, showRead }: { m: Message; prev?: Message; next?: Message; showRead: boolean }) {
   if (m.kind === 'system') {
     const [bold, ...rest] = m.text.split(' · ');
+    // A line without " · " is narration, not a timestamp: set it plain.
+    if (!rest.length)
+      return <div style={{ alignSelf: 'center', maxWidth: '84%', margin: '14px 0 8px', fontSize: 12, lineHeight: 1.5, color: 'var(--ios-secondary)', textAlign: 'center' }}>{m.text}</div>;
     return (
       <div style={{ alignSelf: 'center', margin: '14px 0 8px', fontSize: 12, color: 'var(--ios-secondary)', textAlign: 'center' }}>
         <b style={{ fontWeight: 600 }}>{bold}</b> {rest.join(' · ')}
@@ -104,13 +113,12 @@ function Bubble({ m, prev, next, showRead }: { m: Message; prev?: Message; next?
     );
   }
   const out = m.kind === 'out';
-  // A bubble gets a tail when it ends a run of same-side messages (a source label also ends a run).
-  const tail = !next || next.kind !== m.kind || !!m.src;
-  const tight = prev && prev.kind === m.kind && !('src' in prev && prev.src);
+  // A bubble gets a tail when it ends a run of same-side messages.
+  const tail = !next || next.kind !== m.kind;
+  const tight = prev && prev.kind === m.kind;
   return (
     <div style={{ alignSelf: out ? 'flex-end' : 'flex-start', maxWidth: '76%', display: 'flex', flexDirection: 'column', alignItems: out ? 'flex-end' : 'flex-start', margin: out ? '0 4px 0 0' : '0 0 0 4px', marginTop: tight ? 2 : 8 }}>
       <div className={`bubble ${out ? 'out' : 'in'}${tail ? ' tail' : ''}`}>{m.text}</div>
-      <Src text={m.src} style={{ padding: out ? '3px 12px 2px 0' : '3px 0 2px 12px', textAlign: out ? 'right' : 'left' }} />
       {showRead && <div style={{ fontSize: 11, color: 'var(--ios-secondary)', padding: '2px 4px 0 0', fontWeight: 500 }}>已讀</div>}
     </div>
   );
