@@ -13,6 +13,7 @@ export function Phone({ figure }: { figure: Figure }) {
   const [screen, setScreen] = useState<Screen>({ name: 'lock' });
   const [readThreads, setRead] = useState<Set<string>>(new Set());
   const [walletTaken, setWalletTaken] = useState(false);
+  const [plain, setPlain] = useState(false);
 
   const go = (s: Screen) => {
     if (s.name === 'thread') setRead((prev) => new Set(prev).add(s.threadId));
@@ -20,9 +21,9 @@ export function Phone({ figure }: { figure: Figure }) {
   };
 
   const ctx = useMemo(
-    () => ({ figure, screen, go, readThreads, walletTaken, setWalletTaken }),
+    () => ({ figure, screen, go, readThreads, walletTaken, setWalletTaken, plain, setPlain }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [figure, screen, readThreads, walletTaken],
+    [figure, screen, readThreads, walletTaken, plain],
   );
 
   const onWallpaper = screen.name === 'lock' || screen.name === 'home';

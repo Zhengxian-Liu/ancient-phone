@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { usePhone } from '../phone/PhoneContext';
-import { GlossButton, GlossPage, hasGloss } from '../phone/Gloss';
+import { GlossButtons, GlossPage, hasNotes, usePlain } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 
 export function Notes() {
@@ -38,8 +38,8 @@ export function Notes() {
           <div className="status-spacer" />
           <div style={{ height: 44, display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 4px' }}>
             <button className="nav-btn" style={{ color: 'var(--notes-accent)' }} onClick={() => setOpen(null)}>{Glyph.chevronLeft('var(--notes-accent)')}備忘錄</button>
-            {hasGloss(note) ? (
-              <GlossButton color="var(--notes-accent)" onClick={() => setGlossOpen(true)} />
+            {note.plain || hasNotes(note) ? (
+              <GlossButtons color="var(--notes-accent)" canPlain={!!note.plain} onNotes={hasNotes(note) ? () => setGlossOpen(true) : undefined} />
             ) : (
               <span style={{ padding: '0 12px', color: 'var(--notes-accent)', fontSize: 17, fontWeight: 600 }}>完成</span>
             )}
@@ -55,6 +55,7 @@ export function Notes() {
 function NoteBody({ index }: { index: number }) {
   const { figure } = usePhone();
   const n = figure.notes[index];
+  const show = usePlain();
   return (
     <div className="scroll" style={{ padding: '4px 20px 40px', display: 'flex', flexDirection: 'column', gap: 14 }}>
       <div style={{ textAlign: 'center', fontSize: 13, color: 'var(--ios-secondary)' }}>{n.header}</div>
@@ -69,7 +70,7 @@ function NoteBody({ index }: { index: number }) {
           ))}
         </div>
       )}
-      {n.body && <div style={{ fontSize: 17, lineHeight: 1.9, whiteSpace: 'pre-line' }}>{n.body}</div>}
+      {n.body && <div style={{ fontSize: 17, lineHeight: 1.9, whiteSpace: 'pre-line' }}>{show(n.body, n)}</div>}
     </div>
   );
 }

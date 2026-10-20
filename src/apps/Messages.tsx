@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import { usePhone } from '../phone/PhoneContext';
-import { GlossButton, GlossPage, hasGloss } from '../phone/Gloss';
+import { GlossButtons, GlossPage, hasNotes, usePlain } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 import type { Message } from '../types';
 
@@ -50,7 +50,7 @@ export function MessageThread({ threadId }: { threadId: string }) {
   const msgs = thread.messages;
   const lastIsOut = msgs[msgs.length - 1]?.kind === 'out';
   const [glossOpen, setGlossOpen] = useState(false);
-  const glossed = msgs.filter(hasGloss).map((m) => ({
+  const glossed = msgs.filter(hasNotes).map((m) => ({
     ...m,
     original: m.text,
     who: m.kind === 'out' ? figure.name : m.kind === 'in' ? thread.name : undefined,
@@ -79,11 +79,9 @@ export function MessageThread({ threadId }: { threadId: string }) {
           <Avatar text={thread.avatar} size={50} />
           <span style={{ display: 'flex', alignItems: 'center', gap: 2, fontSize: 11 }}>{thread.name}</span>
         </div>
-        {glossed.length > 0 && (
-          <span style={{ position: 'absolute', right: 4, top: 58 }}>
-            <GlossButton onClick={() => setGlossOpen(true)} />
-          </span>
-        )}
+        <span style={{ position: 'absolute', right: 6, top: 58 }}>
+          <GlossButtons canPlain={msgs.some((m) => m.plain)} onNotes={glossed.length ? () => setGlossOpen(true) : undefined} />
+        </span>
       </div>
 
       {/* Input bar */}
@@ -101,11 +99,12 @@ export function MessageThread({ threadId }: { threadId: string }) {
 }
 
 function Bubble({ m, prev, next, showRead }: { m: Message; prev?: Message; next?: Message; showRead: boolean }) {
+  const text = usePlain()(m.text, m);
   if (m.kind === 'system') {
     const [bold, ...rest] = m.text.split(' · ');
     // A line without " · " is narration, not a timestamp: set it plain.
     if (!rest.length)
-      return <div style={{ alignSelf: 'center', maxWidth: '84%', margin: '14px 0 8px', fontSize: 12, lineHeight: 1.5, color: 'var(--ios-secondary)', textAlign: 'center' }}>{m.text}</div>;
+      return <div style={{ alignSelf: 'center', maxWidth: '84%', margin: '14px 0 8px', fontSize: 12, lineHeight: 1.5, color: 'var(--ios-secondary)', textAlign: 'center' }}>{text}</div>;
     return (
       <div style={{ alignSelf: 'center', margin: '14px 0 8px', fontSize: 12, color: 'var(--ios-secondary)', textAlign: 'center' }}>
         <b style={{ fontWeight: 600 }}>{bold}</b> {rest.join(' · ')}
@@ -118,7 +117,7 @@ function Bubble({ m, prev, next, showRead }: { m: Message; prev?: Message; next?
   const tight = prev && prev.kind === m.kind;
   return (
     <div style={{ alignSelf: out ? 'flex-end' : 'flex-start', maxWidth: '76%', display: 'flex', flexDirection: 'column', alignItems: out ? 'flex-end' : 'flex-start', margin: out ? '0 4px 0 0' : '0 0 0 4px', marginTop: tight ? 2 : 8 }}>
-      <div className={`bubble ${out ? 'out' : 'in'}${tail ? ' tail' : ''}`}>{m.text}</div>
+      <div className={`bubble ${out ? 'out' : 'in'}${tail ? ' tail' : ''}`}>{text}</div>
       {showRead && <div style={{ fontSize: 11, color: 'var(--ios-secondary)', padding: '2px 4px 0 0', fontWeight: 500 }}>已讀</div>}
     </div>
   );

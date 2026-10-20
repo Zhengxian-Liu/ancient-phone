@@ -17,6 +17,9 @@ export interface PhoneState {
   go: (s: Screen) => void;
   readThreads: Set<string>;
   walletTaken: boolean;
+  /** 白話 mode: show every text's modern rendering instead of the original. */
+  plain: boolean;
+  setPlain: (v: boolean) => void;
   setWalletTaken: (v: boolean) => void;
 }
 

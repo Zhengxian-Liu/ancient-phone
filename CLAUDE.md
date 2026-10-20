@@ -24,7 +24,7 @@ src/
   phone/
     Phone.tsx         screen router, Dynamic Island, status bar, home indicator
     PhoneContext.tsx  shared state (current screen, read threads, wallet)
-    Gloss.tsx         白話註釋 page + the nav button that opens it
+    Gloss.tsx         白話/原文 toggle, 註釋 page and the nav buttons for both
     icons.tsx         original iOS-style app icons and SF-Symbol-like glyphs
   apps/               one file per app: LockScreen, HomeScreen, Messages,
                       Photos, Maps, Wallet, Notes, Wallpaper
@@ -50,9 +50,9 @@ Rules:
 
 **The phone shows only original text.** Every message bubble, photo caption, note body and wallet passage is quoted verbatim from a primary source. If a scene has no surviving words, leave it out (or use a narration line from a source as a centered `system` message) — never write modern dialogue for it.
 
-Everything explanatory goes in the item's `Gloss` and appears only on the 白話註釋 page (a nav-bar button on each thread, photo, note and the wallet):
+Everything explanatory goes in the item's `Gloss`. Each thread, photo, note and the wallet has two nav buttons: 白話 swaps every original text in place for its `plain` (the setting is phone-wide; tap 原文 to switch back), and 註釋 opens a page listing the originals with their `notes` and `src`.
 - `src` — `原文 · 〈篇名〉`; abridge with （節錄）. Double-check the wording against the source.
-- `plain` — the 白話 rendering.
+- `plain` — the 白話 rendering, written to stand in for the original in the same bubble.
 - `notes` — context, word glosses, variant readings, and caveats: who the text was really addressed to, how sure the dating is, and any moment you shifted in time for effect (see the 卜算子 note).
 
 Never invent facts (people, places, dates, events). Write in 繁體中文. Timestamps, place lines and phone UI labels (wallet labels, map stops, to-do items) are the phone's own voice and need no source.

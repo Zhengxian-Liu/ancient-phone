@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { usePhone } from '../phone/PhoneContext';
-import { GlossButton, GlossPage, hasGloss } from '../phone/Gloss';
+import { GlossButtons, GlossPage, hasNotes, usePlain } from '../phone/Gloss';
 import { Glyph } from '../phone/icons';
 
 export function Photos() {
@@ -46,6 +46,7 @@ function PhotoViewer({ index, onClose }: { index: number; onClose: () => void })
   const { figure } = usePhone();
   const p = figure.photos[index];
   const [glossOpen, setGlossOpen] = useState(false);
+  const show = usePlain();
   const rows: [string, string][] = [
     ['裝置', '無（當時尚無相機）'],
     ['地點', p.place],
@@ -60,7 +61,11 @@ function PhotoViewer({ index, onClose }: { index: number; onClose: () => void })
           <span style={{ fontSize: 15, fontWeight: 600 }}>{p.place}</span>
           <span style={{ fontSize: 12, color: 'var(--ios-secondary)' }}>{p.date}</span>
         </span>
-        {hasGloss(p) ? <GlossButton onClick={() => setGlossOpen(true)} /> : <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>}
+        {p.plain || hasNotes(p) ? (
+          <GlossButtons canPlain={!!p.plain} onNotes={hasNotes(p) ? () => setGlossOpen(true) : undefined} />
+        ) : (
+          <span style={{ padding: '0 12px', fontSize: 17, color: 'var(--ios-blue)' }}>編輯</span>
+        )}
       </div>
       <div className="scroll" style={{ flex: 1, paddingBottom: 96 }}>
         <div style={{ width: 393, height: 393, background: p.bg, color: p.fg, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -68,7 +73,7 @@ function PhotoViewer({ index, onClose }: { index: number; onClose: () => void })
         </div>
         <div style={{ padding: '16px 16px 0', display: 'flex', flexDirection: 'column', gap: 12 }}>
           <div style={{ fontSize: 20, fontWeight: 700 }}>{p.title}</div>
-          <div style={{ fontSize: 16, lineHeight: 1.6, color: '#1C1C1E' }}>{p.desc}</div>
+          <div style={{ fontSize: 16, lineHeight: 1.6, color: '#1C1C1E' }}>{show(p.desc, p)}</div>
           <div style={{ borderRadius: 12, background: 'var(--ios-bg-grouped)', overflow: 'hidden' }}>
             {rows.map(([k, v], i) => (
               <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '11px 14px', fontSize: 15, borderBottom: i < rows.length - 1 ? '0.5px solid var(--ios-separator-light)' : 0 }}>
